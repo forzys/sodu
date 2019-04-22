@@ -28,6 +28,17 @@ class Find extends React.Component {
       })
     } else {
       //获取列表
+      if(text.indexOf('pan.baidu.com')+1){
+        fetch(API(text).searchPwd).then(res=>res.json()).then(res=>{
+          this.setState({
+            countTips: res.pwd ? '查询到密码':'未查询到密码',
+            list:res.pwd ?[{id:0, context:res.pwd}]:[],
+          })
+        }).catch(err=>{
+          alert('获取数据出错')
+        })
+        return
+      }
       const getList=()=>{
         fetch( API(text).search ).then( res=>res.json() ).then(res=>{
           this.setState({
@@ -55,6 +66,7 @@ class Find extends React.Component {
       //入口
       this.setState({
         count: null,
+        list:[],
         countTips:'正在搜索'
       },()=> {
         getCount()
@@ -93,7 +105,7 @@ class Find extends React.Component {
     const listItem = (info)=> (
       <View style={styles.listItem}>
         <View>
-           <Text style={{ color: '#0078ff',paddingTop:5, paddingBottom:5 }} onPress={()=>{Linking.openURL(info.item.url)}}>{`${info.index+1}、${info.item.context}`} </Text>
+          <Text style={{ color: '#0078ff', paddingTop: 5, paddingBottom: 5 }} numberOfLines={1} onPress={() => { Linking.openURL(info.item.url) }}>{`${info.index + 1}、${info.item.context.replace(/\s*/, '')}`} </Text>
         </View>
         <View style={{display:'flex',flexDirection:'row'}}>
           <Text style={{fontSize:12,marginRight:5}}> { info.item.ctime ? info.item.ctime.split(' ')[0] :'' }</Text>
