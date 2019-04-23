@@ -20,22 +20,24 @@ class Find extends React.Component {
     const { text } = this.state
     if(!text){
       this.setState({
-        list: [],
-        num: 0,
         countTips:'',
-        count: null,
-        top: false,
+        num: 0, list: [],
+        count: null,top: false,
       })
     } else {
       //获取列表
       if(text.indexOf('pan.baidu.com')+1){
-        fetch(API(text).searchPwd).then(res=>res.json()).then(res=>{
-          this.setState({
-            countTips: res.pwd ? '查询到密码':'未查询到密码',
-            list:res.pwd ?[{id:0, context:res.pwd}]:[],
+        this.setState({
+          countTips: '查询中'
+        },()=>{
+          fetch(API(text).searchPwd).then(res=>res.json()).then(res=>{
+            this.setState({
+              countTips: res.pwd ? '查询到密码':'未查询到密码',
+              list:res.pwd ?[{id:0, context:res.pwd}]:[],
+            })
+          }).catch(err=>{
+            Alert.aler(null,'获取数据出错')
           })
-        }).catch(err=>{
-          alert('获取数据出错')
         })
         return
       }
@@ -47,7 +49,7 @@ class Find extends React.Component {
             refreshing: false,
           })
         }).catch(err=>{
-          alert('获取数据出错')
+          Alert.aler(null,'获取数据出错')
         })
       }
       //获取数量
@@ -60,7 +62,7 @@ class Find extends React.Component {
             countTips:`关键词 ${text} 共搜索到 ${res.count} 条数据`,
           },()=>{ getList() })
         }).catch(err=>{
-          alert('获取数据出错')
+          Alert.aler(null,'获取数据出错')
         })
       }
       //入口
@@ -86,7 +88,7 @@ class Find extends React.Component {
             num: num+1
           })
       }).catch(err=>{
-          alert('获取数据出错')
+        Alert.aler(null,'获取数据出错')
       })
     }
   }
@@ -94,9 +96,9 @@ class Find extends React.Component {
   getPwd = (id)=>{
     fetch(API(id).getPwd).then(res=>res.json()).then(res=>{
       Clipboard.setString(res.pwd)
-      Alert.alert('获取密码成功', '密码为：'+ res.pwd + '，已拷贝至粘贴板，点击标题打开链接可直接粘贴')
+      Alert.alert(null, '密码为：'+ res.pwd + '，已复制至粘贴板，点击标题打开链接可直接粘贴')
     }).catch(err=>{
-      alert('获取密码出错')
+      Alert.aler(null,'获取密码出错')
     })
   }
   //渲染列表
@@ -145,7 +147,7 @@ class Find extends React.Component {
     return (
       <View style= { styles.findPage }>
         <Text style= { top ? { margin:10 }:{ marginTop:100,marginBottom:10}}>
-          百度网盘搜索🔍
+          百度网盘搜索
         </Text>
         <View style= {{ width:'60%',alignItems:'center',marginBottom:30,position:'relative'}}>
           <TextInput

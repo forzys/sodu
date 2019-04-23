@@ -26,7 +26,7 @@ const CreateTab = createMaterialTopTabNavigator({
         })
     }
 }, {
-    initialRouteName: 'Find',
+    initialRouteName: 'Home',
     tabBarPosition: 'bottom',
     lazy: true,
     swipeEnabled: false,

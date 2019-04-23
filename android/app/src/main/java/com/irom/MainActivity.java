@@ -1,4 +1,4 @@
-package com.rnapp;
+package com.irom;
 
 import com.facebook.react.ReactActivity;
 //添加

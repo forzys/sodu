@@ -13,7 +13,11 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React home!</Text>
+        <Text style={styles.welcome}>某度网盘搜索-说明：</Text>
+        <Text style={styles.welcome}>1：数据来源 52sopan</Text>
+        <Text style={styles.welcome}>2：输入关键词或网盘分享URL搜索</Text>
+        <Text style={styles.welcome}>3：点击获取密码可查看加密密码</Text>
+        <Text style={styles.welcome}>4：经测试输入URL获取密码概率很低</Text>
       </View>
     );
   }
@@ -22,18 +26,17 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width:'80%',
+    // alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+    // textAlign:'left',
     backgroundColor: '#fafafa',
+    marginTop:-30,
+    marginLeft:'auto',
+    marginRight:'auto',
   },
   welcome: {
-    fontSize: 20,
-    textAlign: 'center',
+    fontSize: 13,
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
