@@ -143,6 +143,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-gesture-handler')
     implementation project(':jcore-react-native')
     implementation project(':jpush-react-native')
     implementation fileTree(dir: "libs", include: ["*.jar"])

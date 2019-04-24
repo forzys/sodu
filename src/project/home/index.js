@@ -8,17 +8,9 @@
 
 import React, {Component} from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import JPushModule from 'jpush-react-native'
 
 export default class App extends Component {
-  
-  componentDidMount(){
-    JPushModule.initPush()
-    JPushModule.addReceiveNotificationListener((message) => {})
-  }
-  componentWillUnmount() {
-    JPushModule.removeReceiveNotificationListener();
-  }
+ 
   showDialog=()=>{
     Alert.alert('联系',`声明：作品api来源网络，仅做练习使用\nEmail：irom@sina.cn `)
   }

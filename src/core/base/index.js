@@ -7,7 +7,7 @@ import {
     createAppContainer,
     createMaterialTopTabNavigator,
 } from 'react-navigation'
-
+import JPushModule from 'jpush-react-native'
 import HomeTab from '../../project/home/index'
 import FindTab from '../../project/find/index'
 
@@ -46,6 +46,8 @@ const CreaterTab = createAppContainer(CreateTab)
 
 export default class App extends Component{
   componentDidMount(){
+    JPushModule.initPush()
+    JPushModule.addReceiveNotificationListener((message) => {})
     this.backHandler = BackHandler.addEventListener('hardwareBackPress',     
     this.onBackButtonPressAndroid);
   }
@@ -60,6 +62,7 @@ export default class App extends Component{
   }
   componentWillUnmount() {
     this.backHandler&&this.backHandler.remove();
+    JPushModule.removeReceiveNotificationListener();
    }
   render() {
     return (
