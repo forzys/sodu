@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View,BackHandler ,ToastAndroid} from 'react-native';
 import {
     // createStackNavigator,
     // createBottomTabNavigator,
@@ -45,6 +45,22 @@ const CreateTab = createMaterialTopTabNavigator({
 const CreaterTab = createAppContainer(CreateTab)
 
 export default class App extends Component{
+  componentDidMount(){
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress',     
+    this.onBackButtonPressAndroid);
+  }
+  onBackButtonPressAndroid = () => {
+       if ( this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) { 
+        //最近2秒内按过back键，可以退出应用。
+        return false; 
+       } 
+       this.lastBackPressed = Date.now();
+       ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT); 
+       return true;
+  }
+  componentWillUnmount() {
+    this.backHandler&&this.backHandler.remove();
+   }
   render() {
     return (
         <CreaterTab />

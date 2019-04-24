@@ -1,6 +1,5 @@
 import React from 'react';
 import { TextInput,StyleSheet, View, Text,Alert,FlatList, Linking,Clipboard } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
 import URL from '../../config/api/urls'
 const API  = URL.panSou
 
@@ -8,11 +7,13 @@ class Find extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      num: 0,
-      list: [],
-      count:null,
-      text: '',
-      countTips:'',
+        num: 0,
+        text: '',
+        countTips:'',
+        list: [],
+        count:null,
+        footer:null,
+        goTop: false
     };
   }
   //开始搜索
@@ -59,6 +60,7 @@ class Find extends React.Component {
         .then(res=> {
           this.setState({
             count: res.count,
+            footer:null,
             countTips:`关键词 ${text} 共搜索到 ${res.count} 条数据`,
           },()=>{ getList() })
         }).catch(err=>{
@@ -77,18 +79,29 @@ class Find extends React.Component {
   }
   //上拉加载数据
   fetchItem=()=>{
-    const { list,num,text,count } = this.state
+    const { list,num,text,count,footer } = this.state
+    // alert((num+1)*30+'----'+count)
+    if( (num+1)*30 >= count && footer){
+      this.setState({
+        footer:  null
+      })
+    }
     if( (num+1)*30 < count ){
-      fetch(API(text,num+1).search )
-      .then(res=>res.json())
-      .then(res => {
-          const newList = list.concat(res)
-          this.setState({
-            list:newList,
-            num: num+1
+      this.setState({
+        footer:  <View style={styles.loading}><Text>正在加载</Text></View>
+      },()=>{
+          fetch(API(text,num+1).search )
+          .then(res=>res.json())
+          .then(res => {
+              const newList = list.concat(res)
+              this.setState({
+                list:newList,
+                num: num+1,
+                footer:null
+              })
+          }).catch(err=>{
+            Alert.aler(null,'获取数据出错')
           })
-      }).catch(err=>{
-        Alert.aler(null,'获取数据出错')
       })
     }
   }
@@ -101,9 +114,27 @@ class Find extends React.Component {
       Alert.aler(null,'获取密码出错')
     })
   }
+
+  handleScroll=(e)=>{
+    const { goTop } = this.state
+    const offsetY = e.nativeEvent.contentOffset.y;
+    if( offsetY>=800 && !goTop){
+      this.setState({
+        goTop:true
+      })
+    }
+    if( offsetY<200 && goTop ){
+      this.setState({
+        goTop:false
+      })
+    }
+  }
+  goToTop=()=>{
+    this._scrollView&&this._scrollView.scrollToIndex({index:0,viewOffset:0,viewPosition:0})
+  }
   //渲染列表
   _renderList =()=>{
-    const { list } = this.state
+    const { list,footer } = this.state
     const listItem = (info)=> (
       <View style={styles.listItem}>
         <View>
@@ -133,13 +164,17 @@ class Find extends React.Component {
         ListEmptyComponent = {emptyItem}
         refreshing = {this.state.refreshing || false}
         onRefresh = {refresh}
+        onScroll={this.handleScroll}
+        ListFooterComponent={footer}
+        ref={component => this._scrollView = component}
         ItemSeparatorComponent = {() => <View><Text></Text></View>}
       />
     )
   }
 
+
   render() {
-    const { list,top,countTips } = this.state
+    const { list,top,countTips,goTop } = this.state
     let renderList = null
     if(list.length){
       renderList = this._renderList()
@@ -164,7 +199,12 @@ class Find extends React.Component {
           <Text style={{position:'absolute',top:-18,left:5,fontSize:10}}> {countTips} </Text>
           { renderList }
         </View>
-
+        {
+          goTop?
+          <Text style={{position:'absolute',right:10,bottom:50,opacity:0.5,width:50,height:50,borderRadius:25,backgroundColor:'#ccc',textAlign:'center',lineHeight:50,fontSize:20}} onPress={this.goToTop}>⇧</Text>
+          :null
+        }
+       
       </View>
     );
   }
@@ -199,6 +239,13 @@ const styled = {
     color: '#5C5C5C',
     backgroundColor: '#ffffff', 
     textAlign: 'left',
+  },
+  loading:{
+    height: 60,
+    fontSize: 15,
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
   }
 }
 const styles = StyleSheet.create({...styled});
