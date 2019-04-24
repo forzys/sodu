@@ -138,11 +138,11 @@ class Find extends React.Component {
     const listItem = (info)=> (
       <View style={styles.listItem}>
         <View>
-          <Text style={{ color: '#0078ff', paddingTop: 5, paddingBottom: 5 }} numberOfLines={1} onPress={() => { Linking.openURL(info.item.url) }}>{`${info.index + 1}、${info.item.context.replace(/\s*/, '')}`} </Text>
+          <Text style={{ color: '#0078ff', paddingTop: 5, paddingBottom: 5 }} numberOfLines={1} onPress={() => { info.item.url&&info.item.url.indexOf('http')!==-1?Linking.openURL(info.item.url):null }}>{`${info.index + 1}、${info.item.context.replace(/\s*/, '')}`} </Text>
         </View>
         <View style={{display:'flex',flexDirection:'row'}}>
           <Text style={{fontSize:12,marginRight:5}}> { info.item.ctime ? info.item.ctime.split(' ')[0] :'' }</Text>
-          <Text style={{fontSize:12,marginRight:5,color:'#feb252'}} onPress={()=>{this.getPwd(info.item.id)}}> { info.item.has_pwd ? !info.item.show ?'查看密码':'隐藏密码' : ''} </Text>
+          <Text style={{fontSize:12,marginRight:5,color:'#feb252'}} onPress={()=>{this.getPwd(info.item.id)}}> { info.item.has_pwd ?'查看密码': ''} </Text>
           <Text style={{fontSize:12,marginRight:5}}> { info.item.show ? info.item.show :'' }</Text>
         </View>
       </View>
